@@ -5,7 +5,7 @@
 <!-- 不使用namespace的话sql搜索定位会比较方便 -->
 <mapper namespace="Member">
 
-	<resultMap id="RM.Member" type="com.company.project.model.Member">
+	<resultMap id="RM.Member" type="com.sjct.common.entity.Member">
         <result property="id" column="id"/>
         <result property="account" column="account"/>
         <result property="password" column="password"/>
