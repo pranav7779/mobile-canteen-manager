@@ -11,9 +11,4 @@
 		<typeAlias alias="production" type="com.qdcl.mart.business.domain.Production" />
 	</typeAliases>
 	 -->
-	<!-- SQL映射文件 
-	<mappers>
-		<mapper resource="mapper/ProductionMapper.xml" />
-	</mappers>
-	-->
 </configuration>

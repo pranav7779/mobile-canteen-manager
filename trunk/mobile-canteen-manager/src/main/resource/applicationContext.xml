@@ -48,7 +48,8 @@
 	<!-- Mybatis's sqlSessionFactory config -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"></property>
-		<property name="configLocation" value="classpath:mybatis-config.xml"/>		
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>	
+		<property name="mapperLocations" value="classpath:/com/sjct/common/mapper/*Mapper.xml" />
 	</bean>
 	
 	<bean name="transactionManager"
