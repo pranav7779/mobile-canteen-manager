@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 不使用namespace的话sql搜索定位会比较方便 -->
+<mapper namespace="Member">
+
+	<resultMap id="RM.Member" type="com.company.project.model.Member">
+        <result property="id" column="id"/>
+        <result property="account" column="account"/>
+        <result property="password" column="password"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="status" column="status"/>
+        <result property="certType" column="cert_type"/>
+        <result property="sex" column="sex"/>
+        <result property="areaId" column="areaId"/>
+        <result property="im" column="im"/>
+        <result property="userLevel" column="user_level"/>
+        <result property="recoMember" column="reco_member"/>
+        <result property="registerTime" column="register_time"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="Member.columns">
+	    <![CDATA[
+		id,account,password,phone,email,status,cert_type,sex,areaId,im,user_level,reco_member,register_time,last_login_time
+	    ]]>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="Member.insert" useGeneratedKeys="true" keyProperty="id">
+    <![CDATA[
+        INSERT INTO member (
+        	id ,
+        	account ,
+        	password ,
+        	phone ,
+        	email ,
+        	status ,
+        	cert_type ,
+        	sex ,
+        	areaId ,
+        	im ,
+        	user_level ,
+        	reco_member ,
+        	register_time ,
+        	last_login_time 
+        ) VALUES (
+        	#{id} ,
+        	#{account} ,
+        	#{password} ,
+        	#{phone} ,
+        	#{email} ,
+        	#{status} ,
+        	#{certType} ,
+        	#{sex} ,
+        	#{areaId} ,
+        	#{im} ,
+        	#{userLevel} ,
+        	#{recoMember} ,
+        	#{registerTime} ,
+        	#{lastLoginTime} 
+        )
+    ]]>
+	</insert>
+    
+	<update id="Member.update" >
+    <![CDATA[
+        UPDATE member SET
+	        account = #{account} ,
+	        password = #{password} ,
+	        phone = #{phone} ,
+	        email = #{email} ,
+	        status = #{status} ,
+	        cert_type = #{certType} ,
+	        sex = #{sex} ,
+	        areaId = #{areaId} ,
+	        im = #{im} ,
+	        user_level = #{userLevel} ,
+	        reco_member = #{recoMember} ,
+	        register_time = #{registerTime} ,
+	        last_login_time = #{lastLoginTime} 
+        WHERE 
+	        id = #{id} 
+    ]]>
+	</update>
+
+    <delete id="Member.delete">
+    <![CDATA[
+        DELETE FROM member WHERE
+        id = #{id} 
+    ]]>
+    </delete>
+    
+    <select id="Member.getById" resultMap="RM.Member">
+		SELECT <include refid="Member.columns" />
+	    <![CDATA[
+		    FROM member 
+	        WHERE 
+		        id = #{id} 
+	    ]]>
+	</select>
+	
+	<sql id="Member.findPage.where">
+		<!-- ognl访问静态方法的表达式 为@class@method(args),以下为调用rapid中的Ognl.isNotEmpty()方法,还有其它方法如isNotBlank()可以使用，具体请查看Ognl类 -->
+		<where>	      				
+	       <if test="@Ognl@isNotEmpty(id)">
+				AND id = #{id}
+			</if>
+	       <if test="@Ognl@isNotEmpty(account)">
+				AND account = #{account}
+			</if>
+	       <if test="@Ognl@isNotEmpty(password)">
+				AND password = #{password}
+			</if>
+	       <if test="@Ognl@isNotEmpty(phone)">
+				AND phone = #{phone}
+			</if>
+	       <if test="@Ognl@isNotEmpty(email)">
+				AND email = #{email}
+			</if>
+	       <if test="@Ognl@isNotEmpty(status)">
+				AND status = #{status}
+			</if>
+	       <if test="@Ognl@isNotEmpty(certType)">
+				AND cert_type = #{certType}
+			</if>
+	       <if test="@Ognl@isNotEmpty(sex)">
+				AND sex = #{sex}
+			</if>
+	       <if test="@Ognl@isNotEmpty(areaId)">
+				AND areaId = #{areaId}
+			</if>
+	       <if test="@Ognl@isNotEmpty(im)">
+				AND im = #{im}
+			</if>
+	       <if test="@Ognl@isNotEmpty(userLevel)">
+				AND user_level = #{userLevel}
+			</if>
+	       <if test="@Ognl@isNotEmpty(recoMember)">
+				AND reco_member = #{recoMember}
+			</if>
+	       <if test="@Ognl@isNotEmpty(registerTimeBegin)">
+				AND register_time >= #{registerTimeBegin}
+		   </if>
+		   <if test="@Ognl@isNotEmpty(registerTimeEnd)">
+				AND register_time &lt;= #{registerTimeEnd}
+		   </if>
+	       <if test="@Ognl@isNotEmpty(lastLoginTimeBegin)">
+				AND last_login_time >= #{lastLoginTimeBegin}
+		   </if>
+		   <if test="@Ognl@isNotEmpty(lastLoginTimeEnd)">
+				AND last_login_time &lt;= #{lastLoginTimeEnd}
+		   </if>
+		</where>
+	</sql>
+		
+    <select id="Member.findPage.count" resultType="long">
+        SELECT count(*) FROM member 
+		<include refid="Member.findPage.where"/>    
+    </select>
+    
+    <select id="Member.findPage" resultMap="RM.Member">
+    	SELECT <include refid="Member.columns" />
+	    FROM member 
+		<include refid="Member.findPage.where"/>
+		
+		<if test="@Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+
+	
+</mapper>
