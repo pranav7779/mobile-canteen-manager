@@ -12,8 +12,7 @@
 	http://www.springframework.org/schema/aop
 	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
 	http://www.springframework.org/schema/context 
-	http://www.springframework.org/schema/context/spring-context-3.0.xsd"
-	default-lazy-init="true">
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 	<description>Spring Config File</description>
 	<!-- Bean扫描路径 -->
 	<context:component-scan base-package="com.sjct.*" />	
@@ -47,13 +46,13 @@
 	
 	<!-- Mybatis's sqlSessionFactory config -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource"></property>
-		<property name="configLocation" value="classpath:mybatis-config.xml"/>	
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
 		<property name="mapperLocations" value="classpath:/com/sjct/common/mapper/*Mapper.xml" />
+		<property name="transactionFactoryClass" value="org.apache.ibatis.transaction.managed.ManagedTransactionFactory" />
 	</bean>
 	
-	<bean name="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
@@ -63,16 +62,16 @@
 			<tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
             <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
             <tx:method name="page*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="save*" propagation="REQUIRED" />
             <tx:method name="update*" propagation="REQUIRED" />
-            <tx:method name="update*" propagation="REQUIRED" />
-            <tx:method name="update*" propagation="REQUIRED" />
-            
+            <tx:method name="delete*" propagation="REQUIRED" />
 		</tx:attributes>
 	</tx:advice>
 
 	<aop:config>
-		<aop:pointcut id="operationTrans"	expression="execution(* com.sjct.core.service.*.*(..))" />
-		<aop:advisor advice-ref="txAdvice"	pointcut-ref="operationTrans" />
+		<aop:advisor advice-ref="txAdvice"	pointcut="execution(* com.sjct.core.dao.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice"	pointcut="execution(* com.sjct.core.service.*.*(..))" />
 	</aop:config>	
 	
+	<bean class="com.sjct.core.base.SpringContextHolder" lazy-init="false"/>
 </beans>

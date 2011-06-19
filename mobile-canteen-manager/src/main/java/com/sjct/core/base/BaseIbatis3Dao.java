@@ -10,8 +10,10 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DaoSupport;
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 import com.sjct.common.orm.Page;
 import com.sjct.common.orm.PageRequest;
@@ -31,6 +33,7 @@ public abstract class BaseIbatis3Dao<E, PK extends Serializable> extends DaoSupp
 		return sqlSessionFactory;
 	}
 
+	@Autowired
 	public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
 		this.sqlSessionFactory = sqlSessionFactory;
 		this.sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory);
@@ -41,38 +44,35 @@ public abstract class BaseIbatis3Dao<E, PK extends Serializable> extends DaoSupp
 	}
 
 	public Object getById(PK primaryKey) {
-		Object object = getSqlSessionTemplate().selectOne(
-				getFindByPrimaryKeyStatement(), primaryKey);
+		Object object = getSqlSessionTemplate().selectOne(getFindByPrimaryKeyStatement(), primaryKey);
 		return object;
 	}
 
 	public void deleteById(PK id) {
-		int affectCount = getSqlSessionTemplate().delete(getDeleteStatement(),
-				id);
+		int affectCount = getSqlSessionTemplate().delete(getDeleteStatement(),id);
 	}
 
 	public void save(E entity) {
 		prepareObjectForSaveOrUpdate(entity);
-		int affectCount = getSqlSessionTemplate().insert(getInsertStatement(),
-				entity);
+		int affectCount = getSqlSessionTemplate().insert(getInsertStatement(),entity);
 	}
 
 	public void update(E entity) {
 		prepareObjectForSaveOrUpdate(entity);
-		int affectCount = getSqlSessionTemplate().update(getUpdateStatement(),
-				entity);
+		int affectCount = getSqlSessionTemplate().update(getUpdateStatement(),entity);
 	}
 
 	/**
-	 * 用于子类覆盖,在insert,update之前调用
+	 * 用于子类覆盖,在insert,update之前调用,一般检查SQL注入
 	 * 
 	 * @param o
 	 */
 	protected void prepareObjectForSaveOrUpdate(E o) {
+		
 	}
 
 	public String getIbatisMapperNamesapce() {
-		throw new RuntimeException("not yet implement");
+		return com.sjct.common.util.ReflectionUtils.getSuperClassGenricType(getClass()).getSimpleName();
 	}
 
 	public String getFindByPrimaryKeyStatement() {
