@@ -12,7 +12,7 @@
 	<properties>
 		<spring.version>3.1.0.M1</spring.version>
 		<slf4j.version>1.6.1</slf4j.version>
-		<java.version>1.6</java.version>
+		<java.version>1.7</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compile.encoding>UTF-8</maven.compile.encoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
