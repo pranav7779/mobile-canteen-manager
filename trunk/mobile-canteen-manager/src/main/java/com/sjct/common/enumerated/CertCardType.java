@@ -22,12 +22,10 @@ public enum CertCardType implements DescriptionID {
 		this.description = description;
 	}
 
-	@Override
 	public String getDescription() {
 		return this.description;
 	}
 
-	@Override
 	public int getIndex() {
 		return this.index;
 	}
